@@ -13,3 +13,15 @@
 .widthInherit {
     width: inherit;
 }
+
+.width250px {
+    width: 250px;
+}
+
+.width350px {
+    width: 350px;
+}
+
+.width450px {
+    width: 450px;
+}
