@@ -1,7 +1,7 @@
 import ItemModel from "@/app/interfaces/ItemModel";
 import { itemManager } from "@/domain/EntityManagerCollection";
 import Item from "@/domain/entities/Item";
-import { writeFileSync } from "fs";
+import { rmdir, writeFileSync } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
 // Request handlers:
@@ -133,10 +133,58 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function PUT(request: NextRequest): Promise<NextResponse> {
-    console.log("PUT");
-    return NextResponse.json(
-        { success: true }
-    );
+    try {
+        // Get request's body as form data
+        const formData: FormData = await request.formData();
+
+        // Get necessary informations from form data
+        const id: string = formData.get("id") as string;
+        const name: string = formData.get("name") as string;
+        const description: string = formData.get("description") as string;
+        const price: number = Number.parseInt(
+            formData.get("price") as string
+        );
+        const image: File | null = formData.get("image") as File | null;
+
+        // Get item target entity with given id
+        const item: Item | undefined = await itemManager.get(id);
+
+        // Entity with given id not exist case
+        if (!item) {
+            return NextResponse.json(
+                { success: false, message: `Không tồn tại sản phẩm với mã "${id}" trong cơ sở dữ liệu hệ thống!` }
+            );
+        }
+
+        // Update item's field base on given information from form data
+        item.Id = id;
+        item.Name = name;
+        item.Description = description;
+        item.Price = price;
+
+        // Update image case
+        if (image) {
+            // Remove current image of item out of app's storage
+            removeItemImage(item.Image as string);
+
+            // Upload new image for this item
+            item.Image = await uploadItemImage(image);
+        }
+
+        // Updating item
+        itemManager.update(item);
+
+        // Success responding
+        return NextResponse.json(
+            { success: true }
+        );
+    }
+    catch (error: any) {
+        console.error(error);
+        return NextResponse.json(
+            { success: false, message: "Đã có lỗi trong quá trình xử lý!" }
+        );
+    }
 }
 
 // Functions:
@@ -162,4 +210,16 @@ async function uploadItemImage(file: File): Promise<string> {
     
     // Return path
     return `/itemimages/${name}`;
+}
+function removeItemImage(path: string): void {
+    // Path splitting by '/'
+    const splittedPath: string[] = path.split('/');
+
+    // Remove dir
+    rmdir(
+        `${process.cwd}/public/itemimages/${splittedPath[splittedPath.length-1]}`,
+        function (error: any) {
+            throw error;
+        }
+    )
 }
