@@ -1,5 +1,5 @@
 import { get, getAll, insert, remove, update } from "./DBHandler";
-import { Item, itemKeys } from "./dtos/Item";
+import { ItemData, itemKeys } from "./dtos/ItemData";
 import { IItemDBHandler } from "./interfaces/IItemDBHandler";
 
 export default class ItemDBHandler implements IItemDBHandler {
@@ -12,23 +12,23 @@ export default class ItemDBHandler implements IItemDBHandler {
     }
 
     // Methods:
-    public async getAll(): Promise<Item[]> {
+    public async getAll(): Promise<ItemData[]> {
         return getAll(ItemDBHandler.collectionName, itemKeys);
     }
 
-    public async get(id: string): Promise<Item | undefined> {
+    public async get(id: string): Promise<ItemData | undefined> {
         return get(ItemDBHandler.collectionName, { id: id }, itemKeys);
     }
 
-    public async insert(target: Item): Promise<void> {
+    public async insert(target: ItemData): Promise<void> {
         return insert(ItemDBHandler.collectionName, target);
     }
 
-    public async update(target: Item): Promise<void> {
+    public async update(target: ItemData): Promise<void> {
         return update(ItemDBHandler.collectionName, target, { id: target.id });
     }
 
-    public async remove(target: Item): Promise<void> {
+    public async remove(target: ItemData): Promise<void> {
         return remove(ItemDBHandler.collectionName, { id: target.id });
     }
 }
