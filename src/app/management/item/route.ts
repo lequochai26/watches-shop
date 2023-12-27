@@ -1,7 +1,7 @@
 import ItemModel from "@/app/interfaces/ItemModel";
 import { itemManager } from "@/domain/EntityManagerCollection";
 import Item from "@/domain/entities/Item";
-import { rmSync, rmdir, writeFileSync } from "fs";
+import { existsSync, mkdirSync, rmSync, rmdir, writeFileSync } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
 // Request handlers:
@@ -278,7 +278,18 @@ async function uploadItemImage(file: File): Promise<string> {
     const name: string = `${id}.${file.type.split("/")[1]}`;
 
     // Get path
-    writeFileSync(`${process.cwd()}/public/itemimages/${name}`, Buffer.from(await file.arrayBuffer()));
+    const path: string = `${process.cwd()}/public/itemimages`;
+
+    // Check and mkdir if current path's directory not exist
+    if (!existsSync(path)) {
+        mkdirSync(path);
+    }
+
+    // Get write path
+    const writePath: string = `${path}/${name}`;
+
+    // Writing file
+    writeFileSync(writePath, Buffer.from(await file.arrayBuffer()));
     
     // Return path
     return `/itemimages/${name}`;
