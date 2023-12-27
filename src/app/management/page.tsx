@@ -5,6 +5,7 @@ import Button from "../components/Button";
 import InputField from "../components/inputField";
 import ItemModel from "../interfaces/ItemModel";
 import FixedScreen from "../components/FixedScreen";
+import NewItemBox from "./components/NewItemBox";
 
 // RESTful API URL
 const url: string = "/management/item";
@@ -68,6 +69,19 @@ export default function ManagementPage() {
         setKeyword(value);
     }
 
+    function closeFixedScreen() {
+        setPopup(undefined);
+    }
+
+    function showNewItemBox() {
+        setPopup(
+            <NewItemBox
+                close={closeFixedScreen}
+                onAlter={load}
+            />
+        )
+    }
+
     // View:
     return (
         <div>
@@ -80,7 +94,7 @@ export default function ManagementPage() {
                 <div className="ruler"></div>
 
                 {/* Add button */}
-                <Button type="normal" value="Thêm" className="inlineBlock verticalAlignMiddle margin5px marginLeft15px" />
+                <Button type="normal" value="Thêm" className="inlineBlock verticalAlignMiddle margin5px marginLeft15px" onClick={showNewItemBox} />
 
                 {/* Delete button */}
                 <Button type="normal" value="Xóa" className="inlineBlock verticalAlignMiddle margin5px" />
