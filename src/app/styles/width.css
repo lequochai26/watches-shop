@@ -1,0 +1,15 @@
+.widthFitScreen {
+    width: 100vw;
+}
+
+.widthFitParent {
+    width: 100%;
+}
+
+.widthFitContent {
+    width: fit-content;
+}
+
+.widthInherit {
+    width: inherit;
+}

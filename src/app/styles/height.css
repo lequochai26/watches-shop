@@ -1,0 +1,15 @@
+.heightFitScreen {
+    height: 100vh;
+}
+
+.heightFitParent {
+    height: 100%;
+}
+
+.heightFitContent {
+    height: fit-content;
+}
+
+.heightInherit {
+    height: inherit;
+}
