@@ -1,9 +1,72 @@
 'use client'
 
+import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 import Button from "../components/Button";
 import InputField from "../components/inputField";
+import ItemModel from "../interfaces/ItemModel";
 
+// RESTful API URL
+const url: string = "/management/item";
+
+// Component:
 export default function ManagementPage() {
+    // States:
+    const [ items, setItems ] = useState<ItemModel[]>([]);
+    const [ keyword, setKeyword ] = useState<string>("");
+
+    // Effects:
+    useEffect(
+        function () {
+            load().then(
+                function () {
+                    console.log("Items loaded successfully!")
+                }
+            );
+        }, []
+    )
+
+    // Data operations:
+    async function load(keyword?: string) {
+        try {
+            // Sending HTTP request and receiving response
+            const response: Response = await fetch(
+                `${url}?method=${!keyword ? "GETALL": `GETBYKEYWORD&keyword=${keyword}`}`,
+                {
+                    method: "GET"
+                }
+            )
+
+            // Parsing response into json
+            const { success, result, message }: { success: boolean, result: ItemModel[], message: string } = await response.json();
+
+            // Failed case
+            if (!success) {
+                alert(message);
+            }
+            // Success case
+            else {
+                setItems(result);
+            }
+        }
+        catch (error: any) {
+            alert("Đã có lỗi xảy ra trong quá trình xử lý!");
+            console.error(error);
+        }
+    }
+
+    // Event handlers:
+    const keywordChange: ChangeEventHandler<HTMLInputElement> = function (event: ChangeEvent<HTMLInputElement>) {
+        // Get target from event
+        const target: HTMLInputElement = event.target;
+
+        // Get value from target
+        const value: string = target.value;
+
+        // Set keyword base on value
+        setKeyword(value);
+    }
+
+    // View:
     return (
         <div>
             {/* Header */}
@@ -18,13 +81,13 @@ export default function ManagementPage() {
                 <Button type="normal" value="Xóa" className="inlineBlock verticalAlignMiddle margin5px" />
 
                 {/* Search keyword input field */}
-                <InputField type="text" placeholder="Từ khóa tìm kiếm" className="inlineBlock verticalAlignMiddle margin5px" />
+                <InputField type="text" value={keyword} placeholder="Từ khóa tìm kiếm" className="inlineBlock verticalAlignMiddle margin5px" onChange={keywordChange} />
 
                 {/* Search button */}
-                <Button type="normal" value="Tìm kiếm" className="inlineBlock verticalAlignMiddle margin5px" />
+                <Button type="normal" value="Tìm kiếm" className="inlineBlock verticalAlignMiddle margin5px" onClick={ function() {load(keyword)} } />
 
                 {/* Reload button */}
-                <Button type="normal" value="Tải lại" className="inlineBlock verticalAlignMiddle margin5px" />
+                <Button type="normal" value="Tải lại" className="inlineBlock verticalAlignMiddle margin5px" onClick={ function() {load()} } />
             </div>
 
             {/* Body */}
@@ -33,8 +96,8 @@ export default function ManagementPage() {
                 <table className="widthFitParent">
                     {/* Table header */}
                     <thead>
-                        <tr>
-                            <th className="textAlignLeft">
+                        <tr className="textAlignLeft">
+                            <th>
                                 <input type="checkbox" />
                             </th>
 
@@ -58,7 +121,36 @@ export default function ManagementPage() {
 
                     {/* Table body */}
                     <tbody>
+                        {
+                            items.map(
+                                function (item: ItemModel): JSX.Element {
+                                    return (
+                                        <tr key={item.id}>
+                                            <td className="textAlignLeft">
+                                                <input type="checkbox" />
+                                            </td>
 
+                                            <td>
+                                                {item.id}
+                                            </td>
+
+                                            <td>
+                                                {item.name}
+                                            </td>
+
+                                            <td>
+                                                {item.price}
+                                            </td>
+
+                                            <td className="textAlignRight">
+                                                <Button type="normal" value="Sửa" className="margin5px" />
+                                                <Button type="normal" value="Xóa" className="margin5px" />
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                            )
+                        }
                     </tbody>
                 </table>
             </div>
