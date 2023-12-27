@@ -37,3 +37,6 @@ next-env.d.ts
 
 # Test route
 src/app/test
+
+# Item images
+public/itemimages

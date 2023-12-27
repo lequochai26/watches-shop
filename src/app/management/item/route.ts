@@ -1,6 +1,7 @@
 import ItemModel from "@/app/interfaces/ItemModel";
 import { itemManager } from "@/domain/EntityManagerCollection";
 import Item from "@/domain/entities/Item";
+import { writeFileSync } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
 // Request handlers:
@@ -81,6 +82,63 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 }
 
+export async function POST(request: NextRequest): Promise<NextResponse> {
+    try {
+        // Get request's form data
+        const formData: FormData = await request.formData();
+
+        // Get necessary informations from formData
+        const id: string = formData.get("id") as string;
+        const name: string = formData.get("name") as string;
+        const description: string = formData.get("description") as string;
+        const price: number = Number.parseInt(
+            formData.get("price") as string
+        );
+        const image: File = formData.get("image") as File;
+
+        // Entitiy with given id already exist case
+        if (await itemManager.get(id)) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: `Đã tồn tại sản phẩm với mã "${id}"`
+                }
+            );
+        }
+
+        // Create new entity
+        const item: Item = new Item();
+
+        // Entity fields assignment
+        item.Id = id;
+        item.Name = name;
+        item.Description = description;
+        item.Price = price;
+        item.Image = await uploadItemImage(image);
+        
+        // Inserting entity into db
+        await itemManager.insert(item);
+
+        // Success responding
+        return NextResponse.json(
+            { success: true }
+        );
+    }
+    catch (error: any) {
+        console.error(error);
+        return NextResponse.json(
+            { success: false, message: "Đã có lỗi xảy ra trong quá trình xử lý!" }
+        );
+    }
+}
+
+export async function PUT(request: NextRequest): Promise<NextResponse> {
+    console.log("PUT");
+    return NextResponse.json(
+        { success: true }
+    );
+}
+
 // Functions:
 function entityToModel(entity: Item): ItemModel {
     return {
@@ -90,4 +148,18 @@ function entityToModel(entity: Item): ItemModel {
         price: entity.Price as number,
         image: entity.Image as string
     };
+}
+
+async function uploadItemImage(file: File): Promise<string> {
+    // Get id
+    const id: string = new Date().getTime().toString();
+
+    // Get file name
+    const name: string = `${id}.${file.type.split("/")[1]}`;
+
+    // Get path
+    writeFileSync(`${process.cwd()}/public/itemimages/${name}`, Buffer.from(await file.arrayBuffer()));
+    
+    // Return path
+    return `/itemimages/${name}`;
 }
