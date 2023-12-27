@@ -3,3 +3,12 @@
 @import "styles/border.css";
 @import "styles/height.css";
 @import "styles/width.css";
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+}
