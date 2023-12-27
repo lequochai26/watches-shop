@@ -13,6 +13,9 @@
 @import "styles/font-size.css";
 @import "styles/margin.css";
 @import "styles/text-align.css";
+@import "styles/position.css";
+@import "styles/left.css";
+@import "styles/right.css";
 
 * {
     box-sizing: border-box;

@@ -4,6 +4,7 @@ import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 import Button from "../components/Button";
 import InputField from "../components/inputField";
 import ItemModel from "../interfaces/ItemModel";
+import FixedScreen from "../components/FixedScreen";
 
 // RESTful API URL
 const url: string = "/management/item";
@@ -13,6 +14,7 @@ export default function ManagementPage() {
     // States:
     const [ items, setItems ] = useState<ItemModel[]>([]);
     const [ keyword, setKeyword ] = useState<string>("");
+    const [ popup, setPopup ] = useState<JSX.Element | undefined>(undefined);
 
     // Effects:
     useEffect(
@@ -69,6 +71,9 @@ export default function ManagementPage() {
     // View:
     return (
         <div>
+            {/* Fixed screen */}
+            <FixedScreen content={popup} />
+
             {/* Header */}
             <div className="block widthFitParent height50px backgroundWhite borderBlackThin">
                 {/* Ruler */}
