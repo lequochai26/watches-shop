@@ -173,6 +173,50 @@ export default function ManagementPage() {
         }
     }
 
+    async function removeSelectedItems() {
+        try {
+            // Sending HTTP request and receiving response
+            const response: Response = await fetch(
+                url,
+                {
+                    method: "DELETE",
+                    body: JSON.stringify(
+                        {
+                            targets: items.map(
+                                function (item: ItemModelDataRow): ItemModel | undefined {
+                                    if (item.selected) {
+                                        return item;
+                                    }
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+
+            // Parsing response's body into json
+            const { success, message }: { success: boolean, message: string } = await response.json();
+
+            // Failed case
+            if (!success) {
+                alert(message);
+            }
+            // Success case
+            else {
+                load().catch(
+                    function (error: any) {
+                        alert("Đã có lỗi xảy ra trong quá trình xử lý!");
+                        console.error(error);
+                    }
+                )
+            }
+        }
+        catch (error: any) {
+            alert("Đã có lỗi xảy ra trong quá trình xử lý!");
+            console.error(error);
+        }
+    }
+
     // View:
     return (
         <div>
@@ -188,7 +232,7 @@ export default function ManagementPage() {
                 <Button type="normal" value="Thêm" className="inlineBlock verticalAlignMiddle margin5px marginLeft15px" onClick={showNewItemBox} />
 
                 {/* Delete button */}
-                <Button type="normal" value="Xóa" className="inlineBlock verticalAlignMiddle margin5px" />
+                <Button type="normal" value="Xóa" className="inlineBlock verticalAlignMiddle margin5px" onClick={removeSelectedItems} />
 
                 {/* Search keyword input field */}
                 <InputField type="text" value={keyword} placeholder="Từ khóa tìm kiếm" className="inlineBlock verticalAlignMiddle margin5px width450px" onChange={keywordChange} />
@@ -253,8 +297,11 @@ export default function ManagementPage() {
                                             </td>
 
                                             <td className="textAlignRight">
+                                                {/* Edit button */}
                                                 <Button type="normal" value="Sửa" className="margin5px" onClick={ function () {showEditItemBox(index)} } />
-                                                <Button type="normal" value="Xóa" className="margin5px" onClick={ function () {} } />
+
+                                                {/* Delete button */}
+                                                <Button type="normal" value="Xóa" className="margin5px" onClick={ function () {removeItem(index)} } />
                                             </td>
                                         </tr>
                                     )
