@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, FormEvent, FormEventHandler, useState } from "react";
 import ItemDataAlterComponentProps from "../interfaces/ItemDataAlterComponentProps";
 import ItemModel from "@/app/interfaces/ItemModel";
 import InputField from "@/app/components/InputField";
@@ -76,11 +76,59 @@ export default function ItemBox({ close, onAlter, target }: ItemBoxProps) {
         }
     }
 
+    const submit: FormEventHandler<HTMLFormElement> = async function(event: FormEvent<HTMLFormElement>): Promise<void> {
+        // Default preventing
+        event.preventDefault();
+
+        // Create form data
+        const formData: FormData = new FormData();
+        
+        // Form data's value establishing
+        formData.set("id", fields.id as string);
+        formData.set("name", fields.name as string);
+        formData.set("description", fields.description as string);
+        formData.set("price", fields.price?.toString() as string);
+        if (selectedImage) {
+            formData.set("image", selectedImage);
+        }
+
+        try {
+            // Sending HTTP request and receiving response
+            const response: Response = await fetch(
+                url,
+                {
+                    method: (target ? "PUT": "POST"),
+                    body: formData
+                }
+            )
+    
+            // Parsing response's body into json
+            const { success, message }: { success: boolean, message: string } = await response.json();
+    
+            // Failed case
+            if (!success) {
+                alert(message);
+            }
+            // Success case
+            else {
+                // Fire onAlter
+                onAlter();
+    
+                // Close this fixed screen
+                close();
+            }
+        }
+        catch (error: any) {
+            alert("Đã có lỗi xảy ra trong quá trình xử lý!");
+            console.error(error);
+        }
+    }
+
     // View:
     return (
         <div className="inlineBlock verticalAlignMiddle width65vw height80vh backgroundWhite borderBlackThin borderRadius10px padding15px overflowScroll">
             {/* Form */}
-            <form>
+            <form onSubmit={submit}>
                 {/* Table */}
                 <table className="widthFitParent">
                     {/* Table body */}
