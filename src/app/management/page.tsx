@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import InputField from "../components/InputField";
 import ItemModel from "../interfaces/ItemModel";
 import FixedScreen from "../components/FixedScreen";
-import NewItemBox from "./components/NewItemBox";
+import ItemBox from "./components/ItemBox";
 
 // RESTful API URL
 const url: string = "/management/item";
@@ -75,7 +75,7 @@ export default function ManagementPage() {
 
     function showNewItemBox() {
         setPopup(
-            <NewItemBox
+            <ItemBox
                 close={closeFixedScreen}
                 onAlter={load}
             />

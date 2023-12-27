@@ -20,11 +20,11 @@ export default function Button({ type, value, className, onClick }: ButtonProps)
         );
 
         case 'submit': return (
-            <input type="submit" value={ value } />
+            <input type="submit" value={ value } className={className} />
         )
 
         case 'normalInForm': return (
-            <input type="button" value={ value } onClick={ onClick } />
+            <input type="button" value={ value } onClick={ onClick } className={className} />
         )
     }
 }
