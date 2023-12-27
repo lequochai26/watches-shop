@@ -8,6 +8,7 @@ config();
 const dbHost: string = process.env.DB_HOST as string;
 const dbPort: string = process.env.DB_PORT as string;
 const dbName: string = process.env.DB_NAME as string;
+const url: string = `mongodb://${dbHost}:${dbPort}/`;
 
 // Interfaces:
 interface AccessToCollectionPath {
@@ -122,7 +123,7 @@ export async function remove(collectionName: string, filter: any): Promise<void>
 
 async function accessToCollection(collectionName: string): Promise<AccessToCollectionPath> {
     // Connecting to DB
-    const connection: MongoClient = await MongoClient.connect(collectionName);
+    const connection: MongoClient = await MongoClient.connect(url);
 
     // Access to db through db name
     const db: Db = connection.db(dbName);
