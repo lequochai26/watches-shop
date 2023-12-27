@@ -6,6 +6,7 @@ import InputField from "../components/InputField";
 import ItemModel from "../interfaces/ItemModel";
 import FixedScreen from "../components/FixedScreen";
 import ItemBox from "./components/ItemBox";
+import ItemModelDataRow from "./interfaces/ItemModelDataRow";
 
 // RESTful API URL
 const url: string = "/management/item";
@@ -13,7 +14,7 @@ const url: string = "/management/item";
 // Component:
 export default function ManagementPage() {
     // States:
-    const [ items, setItems ] = useState<ItemModel[]>([]);
+    const [ items, setItems ] = useState<ItemModelDataRow[]>([]);
     const [ keyword, setKeyword ] = useState<string>("");
     const [ popup, setPopup ] = useState<JSX.Element | undefined>(undefined);
 
@@ -48,7 +49,13 @@ export default function ManagementPage() {
             }
             // Success case
             else {
-                setItems(result);
+                setItems(
+                    result.map(
+                        function (itemModel: ItemModel): ItemModelDataRow {
+                            return { ...itemModel, selected: false };
+                        }
+                    )
+                );
             }
         }
         catch (error: any) {
@@ -80,6 +87,90 @@ export default function ManagementPage() {
                 onAlter={load}
             />
         )
+    }
+
+    function selectItem(index: number) {
+        // Get selected item
+        const target: ItemModelDataRow = items[index];
+
+        // Update items
+        setItems(
+            items.map(
+                function (item: ItemModelDataRow, _index: number): ItemModelDataRow {
+                    if (_index !== index) {
+                        return { ...item };
+                    }
+                    else {
+                        return { ...item, selected: !target.selected }
+                    }
+                }
+            )
+        );
+    }
+
+    const selectAll: ChangeEventHandler<HTMLInputElement> = function (event: ChangeEvent<HTMLInputElement>): void {
+        // Get target from event
+        const target: HTMLInputElement = event.target;
+
+        // Get checked field of target
+        const checked: boolean = target.checked;
+
+        // Updating items list
+        setItems(
+            items.map(
+                function (item: ItemModelDataRow): ItemModelDataRow {
+                    return { ...item, selected: checked }
+                }
+            )
+        );
+    }
+
+    function showEditItemBox(index: number) {
+        setPopup(
+            <ItemBox
+                close={closeFixedScreen}
+                onAlter={load}
+                target={items[index]}
+            />
+        )
+    }
+
+    async function removeItem(index: number) {
+        try {
+            // Sending HTTP request and receiving response
+            const response: Response = await fetch(
+                url,
+                {
+                    method: "DELETE",
+                    body: JSON.stringify(
+                        {
+                            target: items[index]
+                        }
+                    )
+                }
+            )
+
+            // Parsing repsonse's body into json
+            const { success, message }: { success: boolean, message: string } = await response.json();
+
+            // Failed case
+            if (!success) {
+                alert(message);
+            }
+            // Success case
+            else {
+                load().catch(
+                    function (error: any) {
+                        alert("Đã có lỗi xảy ra trong quá trình tải lại danh sách sản phẩm!");
+                        console.error(error);
+                    }
+                )
+            }
+        }
+        catch (error: any) {
+            alert("Đã có lỗi xảy ra trong quá trình xử lý!");
+            console.error(error);
+        }
     }
 
     // View:
@@ -117,7 +208,7 @@ export default function ManagementPage() {
                     <thead>
                         <tr className="textAlignLeft">
                             <th>
-                                <input type="checkbox" />
+                                <input type="checkbox" onChange={selectAll} />
                             </th>
 
                             <th>
@@ -142,11 +233,11 @@ export default function ManagementPage() {
                     <tbody>
                         {
                             items.map(
-                                function (item: ItemModel): JSX.Element {
+                                function (item: ItemModelDataRow, index: number): JSX.Element {
                                     return (
                                         <tr key={item.id}>
                                             <td className="textAlignLeft">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" checked={item.selected} onChange={ function() {selectItem(index)} } />
                                             </td>
 
                                             <td>
@@ -162,8 +253,8 @@ export default function ManagementPage() {
                                             </td>
 
                                             <td className="textAlignRight">
-                                                <Button type="normal" value="Sửa" className="margin5px" />
-                                                <Button type="normal" value="Xóa" className="margin5px" />
+                                                <Button type="normal" value="Sửa" className="margin5px" onClick={ function () {showEditItemBox(index)} } />
+                                                <Button type="normal" value="Xóa" className="margin5px" onClick={ function () {} } />
                                             </td>
                                         </tr>
                                     )
