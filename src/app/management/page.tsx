@@ -2,7 +2,7 @@
 
 import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 import Button from "../components/Button";
-import InputField from "../components/inputField";
+import InputField from "../components/InputField";
 import ItemModel from "../interfaces/ItemModel";
 import FixedScreen from "../components/FixedScreen";
 import NewItemBox from "./components/NewItemBox";

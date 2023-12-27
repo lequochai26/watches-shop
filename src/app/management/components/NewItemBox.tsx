@@ -1,7 +1,7 @@
 import { ChangeEvent, ChangeEventHandler, useState } from "react";
 import ItemDataAlterComponentProps from "../interfaces/ItemDataAlterComponentProps";
 import ItemModel from "@/app/interfaces/ItemModel";
-import InputField from "@/app/components/inputField";
+import InputField from "@/app/components/InputField";
 
 // Component:
 export default function NewItemBox({ close, onAlter }: ItemDataAlterComponentProps) {
