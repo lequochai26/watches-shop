@@ -216,6 +216,9 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
 
             // Removing item from db
             await itemManager.remove(item);
+
+            // Remove item's image after removing item
+            removeItemImage(item.Image as string);
         }
 
         // Targets not undefined case
@@ -237,6 +240,9 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
 
                 // Removing item from db
                 await itemManager.remove(item);
+
+                // Remove item's image after removed item
+                removeItemImage(item.Image as string);
             }
         }
 
