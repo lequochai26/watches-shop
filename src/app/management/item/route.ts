@@ -1,7 +1,7 @@
 import ItemModel from "@/app/interfaces/ItemModel";
 import { itemManager } from "@/domain/EntityManagerCollection";
 import Item from "@/domain/entities/Item";
-import { rmdir, writeFileSync } from "fs";
+import { rmSync, rmdir, writeFileSync } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
 // Request handlers:
@@ -187,6 +187,72 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     }
 }
 
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
+    try {
+        // Parsing request's body into json
+        const { target, targets }: { target: ItemModel | undefined, targets: ItemModel[] | undefined } = await request.json();
+
+        // Target and targets undefined case
+        if (!target && !targets) {
+            return NextResponse.json(
+                { success: false, message: "Không tìm thấy sản phẩm cần xóa!" }
+            );
+        }
+
+        // Target not undefined case
+        if (target) {
+            // Destruct target
+            const { id }: ItemModel = target;
+
+            // Get item entity with given id
+            const item: Item | undefined = await itemManager.get(id);
+
+            // Item not found case
+            if (!item) {
+                return NextResponse.json(
+                    { success: false, message: `Không tồn tại sản phẩm với mã "${id}" trong cơ sở dữ liệu hệ thống!` }
+                );
+            }
+
+            // Removing item from db
+            await itemManager.remove(item);
+        }
+
+        // Targets not undefined case
+        if (targets) {
+            // Loop through all targets
+            for (const target of targets) {
+                // Destruct target
+                const { id }: ItemModel = target;
+
+                // Get item entity with given id
+                const item: Item | undefined = await itemManager.get(id);
+
+                // Item not found case
+                if (!item) {
+                    return NextResponse.json(
+                        { success: false, message: `Không tồn tại sản phẩm với mã ${id} trong cơ sở dữ liệu hệ thống!` }
+                    );
+                }
+
+                // Removing item from db
+                await itemManager.remove(item);
+            }
+        }
+
+        // Success responding
+        return NextResponse.json(
+            { success: true }
+        );
+    }
+    catch (error: any) {
+        console.error(error);
+        return NextResponse.json(
+            { success: false, message: "Đã có lỗi xảy ra trong quá trình xử lý!" }
+        );
+    }
+}
+
 // Functions:
 function entityToModel(entity: Item): ItemModel {
     return {
@@ -216,10 +282,5 @@ function removeItemImage(path: string): void {
     const splittedPath: string[] = path.split('/');
 
     // Remove dir
-    rmdir(
-        `${process.cwd}/public/itemimages/${splittedPath[splittedPath.length-1]}`,
-        function (error: any) {
-            throw error;
-        }
-    )
+    rmSync(`${process.cwd()}/public/itemimages/${splittedPath[splittedPath.length-1]}`)
 }
