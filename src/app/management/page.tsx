@@ -100,7 +100,7 @@ export default function ManagementPage() {
                 <Button type="normal" value="Xóa" className="inlineBlock verticalAlignMiddle margin5px" />
 
                 {/* Search keyword input field */}
-                <InputField type="text" value={keyword} placeholder="Từ khóa tìm kiếm" className="inlineBlock verticalAlignMiddle margin5px" onChange={keywordChange} />
+                <InputField type="text" value={keyword} placeholder="Từ khóa tìm kiếm" className="inlineBlock verticalAlignMiddle margin5px width450px" onChange={keywordChange} />
 
                 {/* Search button */}
                 <Button type="normal" value="Tìm kiếm" className="inlineBlock verticalAlignMiddle margin5px" onClick={ function() {load(keyword)} } />
