@@ -16,3 +16,13 @@ export function generateSession(): [ string, any ] {
     // Return
     return [ id, sessions[id] ];
 }
+
+export function getOrGenerateSession(id: string): [ string, any ] {
+    // Session belongs to given id already exist case
+    if (sessions[id]) {
+        return [ id, sessions[id] ];
+    }
+
+    // Generate new session and return the result
+    return generateSession();
+}
