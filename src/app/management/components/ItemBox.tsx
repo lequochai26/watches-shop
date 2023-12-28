@@ -83,8 +83,11 @@ export default function ItemBox({ close, onAlter, target }: ItemBoxProps) {
         // PRE-CHECKING
         // No item image selected case
         if (!selectedImage) {
-            alert("Vui lòng cung cấp hình ảnh sản phẩm trước khi thực hiện hành động này!");
-            return;
+            // Inserting case
+            if (!target) {
+                alert("Vui lòng cung cấp hình ảnh sản phẩm trước khi thực hiện hành động này!");
+                return;
+            }
         }
 
         // Create form data
