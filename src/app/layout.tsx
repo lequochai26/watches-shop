@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import './local_styles/general.css'
 
 export const metadata: Metadata = {
   title: 'NVTM Watches Center',
