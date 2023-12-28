@@ -1,0 +1,100 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #5b1201;
+  --secondary-color: #ecad22;
+}
+
+body {
+  background-color: #f5f8fe;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+/* ============================CRRT - GIỎ HÀNG=========================================== */
+.container-cart {
+  max-width: 100%;
+  padding: 20px 40px;
+}
+
+.container-cart .title-cart {
+  font-size: 32px;
+  font-weight: bold;
+  padding: 10px 0px;
+  letter-spacing: 10px;
+  border-bottom: 4px double #ecad22;
+  color: #422afb;
+}
+
+.container-cart .list-cart {
+  margin-top: 20px;
+  /* display: flex; */
+  border: 1px solid black;
+}
+
+.container-cart .list-cart .list-cart-item {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.container-cart .list-cart .label {
+  font-size: 24px;
+  font-weight: bold;
+  color: #422afb;
+}
+
+.container-cart .list-cart .name {
+  font-size: 20px;
+}
+
+.container-cart .list-cart img {
+  width: 182px;
+}
+
+.container-cart .list-cart button {
+  height: 50px;
+  background-color: #422afb;
+  color: #fff;
+  cursor: pointer;
+}
+
+.container-cart .list-cart button:hover {
+  background-color: var(--secondary-color);
+}
+
+.container-cart .total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  color: red;
+  font-weight: bold;
+}
+
+.container-cart .pay-now {
+  width: 100%;
+  margin-top: 20px;
+  padding: 8px 16px;
+  background-color: #422afb;
+  color: #fff;
+  font-size: 24px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+}
+
+.container-cart .pay-now a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.container-cart .pay-now:hover {
+  background-color: var(--secondary-color);
+}
