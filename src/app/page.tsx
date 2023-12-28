@@ -17,9 +17,6 @@ export default function HomePage() {
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
         />
-        <link rel="stylesheet" href="./assets/css/reset.css" />
-        <link rel="stylesheet" href="./assets/css/custom-scrollbar.css" />
-        <link rel="stylesheet" href="./assets/css/style.css" />
         <title>TRANG CHỦ</title>
       </head>
       <body>
@@ -89,7 +86,7 @@ export default function HomePage() {
                     TRANG CHỦ
                   </a>
                 </li>
-                <li><a href="./introduce.html">GIỚI THIỆU</a></li>
+                <li><a href="/introduce">GIỚI THIỆU</a></li>
                 <li><a href="./production.html">SẢN PHẨM</a></li>
                 <li><a href="./contact.html">LIÊN HỆ</a></li>
               </ul>
