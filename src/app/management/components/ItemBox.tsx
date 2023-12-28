@@ -80,6 +80,13 @@ export default function ItemBox({ close, onAlter, target }: ItemBoxProps) {
         // Default preventing
         event.preventDefault();
 
+        // PRE-CHECKING
+        // No item image selected case
+        if (!selectedImage) {
+            alert("Vui lòng cung cấp hình ảnh sản phẩm trước khi thực hiện hành động này!");
+            return;
+        }
+
         // Create form data
         const formData: FormData = new FormData();
         
