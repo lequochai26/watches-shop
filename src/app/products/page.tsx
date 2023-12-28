@@ -1,3 +1,7 @@
+'use client'
+
+import '../local_styles/general.css'
+
 export default function ProductsPage() {
     // View:
     return (

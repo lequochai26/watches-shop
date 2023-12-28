@@ -2,6 +2,7 @@
 
 import React from "react";
 import { poppins } from "../fonts";
+import '../local_styles/general.css'
 
 export default function LoginPage() {
     // View:
