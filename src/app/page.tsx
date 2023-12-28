@@ -35,7 +35,7 @@ export default function HomePage() {
                 <div className="user">
                   <i className="fa-regular fa-user"></i>
                   <a id="sign-in" href="#!">Đăng kí</a>
-                  <a href="./sign-in.html">Đăng nhập</a>
+                  <a href="/login">Đăng nhập</a>
                 </div>
               </div>
             </div>
