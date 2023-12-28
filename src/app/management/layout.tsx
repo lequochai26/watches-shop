@@ -7,8 +7,10 @@ export default function ManagementLayout(
     }
 ) {
     return (
-        <div className={quicksand.className}>
-            { children }
-        </div>
+        <html>
+            <body className={`${quicksand.className}`}>
+                { children }
+            </body>
+        </html>
     );
 }
